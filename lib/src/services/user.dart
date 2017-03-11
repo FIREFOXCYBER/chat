@@ -3,10 +3,14 @@ import 'package:angel_framework/hooks.dart' as hooks;
 import 'package:mongo_dart/mongo_dart.dart';
 import '../models/user.dart';
 import '../validators/user.dart';
+import 'websocket.dart';
 
 configureServer(Db db) {
   return (Angel app) async {
-    app.use('/api/users', new MongoService(db.collection('users')));
+    app.use(
+        '/api/users',
+        new MongoService(db.collection('users'))
+          ..properties['ws:filter'] = onlyBroadcastToAuthenticatedUsers);
 
     HookedService service = app.service('api/users');
 
@@ -22,10 +26,7 @@ configureServer(Db db) {
 
     // Don't broadcast user events over WebSockets - they're sensitive data!
     service.beforeAll((e) {
-      if (e.params == null)
-        e.params = {'broadcast': false};
-      else
-        e.params['broadcast'] = false;
+      e.params['broadcast'] = false;
     });
 
     // Validate new users.

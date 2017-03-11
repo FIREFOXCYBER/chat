@@ -2,10 +2,14 @@ import 'package:angel_common/angel_common.dart';
 import 'package:angel_framework/hooks.dart' as hooks;
 import 'package:angel_security/hooks.dart' as auth;
 import 'package:mongo_dart/mongo_dart.dart';
+import 'websocket.dart';
 
 AngelConfigurer configureServer(Db db) {
   return (Angel app) async {
-    app.use('/api/messages', new MongoService(db.collection('messages')));
+    app.use(
+        '/api/messages',
+        new MongoService(db.collection('messages'))
+          ..properties['ws:filter'] = onlyBroadcastToAuthenticatedUsers);
 
     var service = app.service('api/messages') as HookedService;
 

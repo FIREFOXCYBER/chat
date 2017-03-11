@@ -12,10 +12,12 @@ This is a good example of:
 * Service hooks
 
 To run:
+
 1. Run `pub get`.
+2. Run `pub build` to compile the client code into Dart.
 2. If you have the [Angel CLI](https://github.com/angel-dart/cli) installed (**recommended!**),
-run `angel start`.
-3. If not, run `dart bin/server.dart`.
+run `angel start --production`.
+3. If not, run `ANGEL_ENV=production dart bin/server.dart`.
 
 # Powered By:
 [![The Angel Framework](https://angel-dart.github.io/images/logo.png)](https://angel-dart.github.io)
