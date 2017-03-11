@@ -14,7 +14,7 @@ configureServer(Angel app) async {
   await db.open();
   app.container.singleton(db);
 
-  // Use `JSON.decode` instead of reflection for serialization - improves performance
+  // Use `JSON.encode` instead of reflection for serialization - improves performance
   app.injectSerializer(JSON.encode);
 
   await app.configure(mustache(new Directory('views')));
