@@ -3,6 +3,7 @@ library chat.config;
 import 'dart:convert';
 import 'dart:io';
 import 'package:angel_common/angel_common.dart';
+import 'package:angel_websocket/server.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'plugins/plugins.dart' as plugins;
 
@@ -18,4 +19,5 @@ configureServer(Angel app) async {
 
   await app.configure(mustache(new Directory('views')));
   await plugins.configureServer(app);
+  app.justBeforeStart.add(new AngelWebSocket());
 }
