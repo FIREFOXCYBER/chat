@@ -69,6 +69,10 @@ class AuthController extends Controller {
   authRedirect() => auth.authenticate('github');
 
   @Expose('/github/callback')
-  authCallback() =>
-      auth.authenticate('github', new AngelAuthOptions(successRedirect: '/'));
+  authCallback() => auth.authenticate('github', new AngelAuthOptions(
+          callback: (req, ResponseContext res, String jwt) async {
+        // Rather than sending a cookie, let's straight-up put the JWT
+        // in the user's query. This is a valid authentication method within `angel_auth`.
+        res.redirect('/?token=$jwt');
+      }));
 }

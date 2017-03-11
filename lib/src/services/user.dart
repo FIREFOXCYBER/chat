@@ -35,9 +35,6 @@ configureServer(Db db) {
     service.afterAll(hooks.remove(['githubId']));
 
     // Deserialize data as a User without reflection.
-    //service.afterAll(hooks.transform(UserMapper.parse));
-    service.afterAll((e) {
-      e.result = new User.fromMap(e.result);
-    });
+    service.afterAll(hooks.transform((map) => new User.fromMap(map)));
   };
 }
