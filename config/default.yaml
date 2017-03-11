@@ -1,0 +1,11 @@
+# Default server configuration.
+host: 127.0.0.1
+mongo_db: mongodb://localhost:27017/chat
+port: 3000
+jwt_secret: "3Q133227824374JQ8217186403328618"
+github:
+  callback: http://localhost:3000/auth/github/callback
+  key: 38f2732440f41ea4fe26
+  secret: 22d944e94c16d3a1961514d9a0e12a2eccb9ad7b
+  authorizationEndpoint: https://github.com/login/oauth/authorize
+  tokenEndpoint: https://github.com/login/oauth/access_token
