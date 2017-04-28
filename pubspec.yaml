@@ -1,23 +1,27 @@
-description: "An easily-extensible web server framework in Dart."
-homepage: "https://github.com/angel-dart/angel"
-name: "chat"
-publish_to: "none"
+description: An easily-extensible web server framework in Dart.
+homepage: https://github.com/angel-dart/angel
+name: chat
+publish_to: none
 dependencies: 
-  angel_auth_oauth2: ^1.0.0
-  angel_common: "^1.0.0-beta"
-  angel_configuration: "^1.0.0"
-  angel_multiserver: "^1.0.0"
-  angel_security: "^1.0.0"
-  angel_websocket: "^1.0.0"
-  angular2: "^2.2.0"
-  owl: "^0.1.1"
+  angel_auth_google: ^1.0.0
+  angel_common: ^1.0.0
+  angel_multiserver: ^1.0.0
+  angel_rethink: ^1.0.0
+  angel_security: ^1.0.0
+  angel_websocket: ^1.0.0
+  angular2: ^3.0.0
 dev_dependencies:
-  browser: "^0.10.0"
-  dart_to_js_script_rewriter: "^1.0.0"
-  grinder: "^0.8.0"
-  http: "^0.11.3"
-  test: "^0.12.13"
+  browser: ^0.10.0
+  dart_to_js_script_rewriter: ^1.0.0
+  http: ^0.11.3
+  test: ^0.12.13
 environment: 
-  sdk: ">=1.19.0"
+  sdk: ">=1.23.0"
 transformers:
 - dart_to_js_script_rewriter
+- angular2:
+    platform_directives:
+    - 'package:angular2/common.dart#COMMON_DIRECTIVES'
+    platform_pipes:
+    - 'package:angular2/common.dart#COMMON_PIPES'
+    entry_points: web/main.dart

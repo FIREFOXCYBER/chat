@@ -8,24 +8,12 @@ configureBefore(Angel app) async {
 }
 
 /// Put your app routes here!
-configureRoutes(Angel app) async {
-  app.get('/', (RequestContext req, ResponseContext res) async {
-    if (!req.properties.containsKey('user')) {
-      // Not authed - redirect to login page
-      return res.redirect('/login');
-    } else {
-      // Otherwise, continue running other handlers, i.e. our static server.
-      return true;
-    }
-  });
-
-  app.get('/login', (RequestContext req, ResponseContext res) => res.render('login'));
-}
+configureRoutes(Angel app) async {}
 
 configureAfter(Angel app) async {
   // Uncomment this to proxy over pub serve while in development:
-  // await app.configure(new PubServeLayer());
-  
+  await app.configure(new PubServeLayer());
+
   // Static server at /web or /build/web, depending on if in production
   //
   // In production, `Cache-Control` headers will also be enabled.

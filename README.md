@@ -1,6 +1,6 @@
 # chat
 Realtime chat built with Angel and Angular 2 Dart.
-Authentication is provided via Github OAuth 2.0.
+Authentication is provided via Google OAuth 2.0.
 
 This is a good example of:
 * WebSocket use

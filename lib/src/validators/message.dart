@@ -1,5 +1,4 @@
 import 'package:angel_validate/angel_validate.dart';
-import 'user.dart' show isUrl;
 
 final Validator MESSAGE = new Validator({
   'text': [isString, isNotEmpty],
@@ -7,4 +6,4 @@ final Validator MESSAGE = new Validator({
 });
 
 final Validator CREATE_MESSAGE = MESSAGE.extend({})
-  ..requiredFields.addAll(['text', 'avatar']);
+  ..requiredFields.addAll(['text', 'avatar', 'userId']);

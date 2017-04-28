@@ -1,10 +1,15 @@
 library chat.routes.controllers.auth;
 
-import 'dart:convert';
-import 'package:angel_auth_oauth2/angel_auth_oauth2.dart';
+import 'package:angel_auth_google/angel_auth_google.dart';
 import 'package:angel_common/angel_common.dart';
-import 'package:oauth2/oauth2.dart' as oauth2;
+import 'package:googleapis/plus/v1.dart';
 import '../../models/user.dart';
+
+const GOOGLE_AUTH_SCOPES = const [
+  PlusApi.PlusMeScope,
+  PlusApi.UserinfoEmailScope,
+  PlusApi.UserinfoProfileScope
+];
 
 @Expose('/auth')
 class AuthController extends Controller {
@@ -14,40 +19,32 @@ class AuthController extends Controller {
   ///
   /// Our User service is already wired to remove sensitive data from serialized JSON.
   deserializer(String id) async =>
-      app.service('api/users').read(id, {'provider': Providers.REST});
+      app.service('api/users').read(id).then(User.parse);
 
   serializer(User user) async => user.id;
 
   /// Attempt to log a user in
-  OAuth2Verifier oauth2Verifier(Service userService) {
-    return (oauth2.Client client) async {
-      var response = await client.get('https://api.github.com/user');
-
-      if (response.statusCode != 200) return null;
-
-      var ghUser = JSON.decode(response.body) as Map;
-      var ghId = ghUser['id'].toString();
-      String name = ghUser['name'], avatar = ghUser['avatar_url'];
-
-      List<User> users = await userService.index({
-        'query': {'githubId': ghId}
-      });
+  GoogleAuthCallback googleAuthVerifier(Service userService) {
+    return (_, Person profile) async {
+      List<User> users = (await userService.index({
+        'query': {'googleId': profile.id}
+      }))
+          .map(User.parse)
+          .toList();
 
       if (users.isNotEmpty) {
-        // User exists, update profile and log in
-        var u = users.firstWhere((user) => user.githubId == ghId,
-            orElse: () => null);
-
-        if (u == null || u.id == null)
-          return null;
-        else {
-          // Will be auto-deserialized into a User, thanks to our hooks
-          return await userService
-              .modify(u.id, {'name': name, 'avatar': avatar});
-        }
+        var user = users.first
+          ..avatar = profile.image.url
+          ..name = profile.displayName;
+        await userService.modify(user.id, user.toJson());
+        return user;
       } else {
-        var u = new User(githubId: ghId, name: name, avatar: avatar);
-        return await userService.create(u.toJson());
+        var userData = await userService.create({
+          'googleId': profile.id,
+          'avatar': profile.image.url,
+          'name': profile.displayName
+        });
+        return User.parse(userData);
       }
     };
   }
@@ -58,21 +55,19 @@ class AuthController extends Controller {
     auth = new AngelAuth(jwtKey: app.jwt_secret, allowCookie: false)
       ..serializer = serializer
       ..deserializer = deserializer
-      ..strategies.add(new OAuth2Strategy(
-          'github', app.github, oauth2Verifier(app.service('api/users'))));
+      ..strategies.add(new GoogleStrategy(
+          callback: googleAuthVerifier(app.service('api/users')),
+          config: app.google,
+          scopes: GOOGLE_AUTH_SCOPES));
 
     await super.call(app);
     await app.configure(auth);
   }
 
-  @Expose('/github')
-  authRedirect() => auth.authenticate('github');
+  @Expose('/google')
+  googleAuth() => auth.authenticate('google');
 
-  @Expose('/github/callback')
-  authCallback() => auth.authenticate('github', new AngelAuthOptions(
-          callback: (req, ResponseContext res, String jwt) async {
-        // Rather than sending a cookie, let's straight-up put the JWT
-        // in the user's query. This is a valid authentication method within `angel_auth`.
-        res.redirect('/?token=$jwt');
-      }));
+  @Expose('/google/callback')
+  googleAuthCallback() => auth.authenticate(
+      'google', new AngelAuthOptions(callback: confirmPopupAuthentication()));
 }

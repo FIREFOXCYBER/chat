@@ -1,14 +1,15 @@
 import 'package:angel_common/angel_common.dart';
 import 'package:angel_framework/hooks.dart' as hooks;
+import 'package:angel_rethink/angel_rethink.dart';
 import 'package:angel_security/hooks.dart' as auth;
-import 'package:mongo_dart/mongo_dart.dart';
+import 'package:rethinkdb_driver2/rethinkdb_driver2.dart';
 import 'websocket.dart';
 
-AngelConfigurer configureServer(Db db) {
+AngelConfigurer configureServer(Connection connection, Rethinkdb r) {
   return (Angel app) async {
     app.use(
         '/api/messages',
-        new MongoService(db.collection('messages'))
+        new RethinkService(connection, r.table('messages'))
           ..properties['ws:filter'] = onlyBroadcastToAuthenticatedUsers);
 
     var service = app.service('api/messages') as HookedService;
