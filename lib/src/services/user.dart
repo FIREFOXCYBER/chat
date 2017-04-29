@@ -33,6 +33,10 @@ configureServer(Connection connection, Rethinkdb r) {
     // Validate new users.
     service.beforeCreated..listen(validateEvent(CREATE_USER));
 
+    service
+      ..beforeCreated.listen(hooks.addCreatedAt())
+      ..beforeModify(hooks.addUpdatedAt());
+
     // Remove sensitive data from serialized JSON.
     service.afterAll(hooks.remove(['googleId']));
 

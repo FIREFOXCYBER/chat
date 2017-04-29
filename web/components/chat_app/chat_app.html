@@ -1,9 +1,24 @@
-<div class="ui menu">
-    <div class="header item">
-        <i class="users icon"></i>
-        Chat
+<material-toolbar icon="people" title="Chat"></material-toolbar>
+<material-menu *ngIf="messages.isNotEmpty" style="padding: 5em 0em;">
+    <menu-item *ngFor="let message of messages" [avatar]="message.user.avatar" [separated]="true">
+        {{message.text}}
+    </menu-item>
+</material-menu>
+<material-fab (click)="submit()" [raised]="true">
+    <glyph icon="send"></glyph>
+</material-fab>
+<div class="main" style="padding: 5em 1em;">
+    <div *ngIf="messages.isEmpty">
+        No messages have been sent yet. Get the conversation started!
     </div>
-</div>
-<div class="ui container">
-    <router-outlet></router-outlet>
+    <br>
+    <div *ngIf="auth.user == null">
+        <material-button (click)="login()" primary raised>Sign in with Google</material-button>
+    </div>
+    <div *ngIf="auth.user != null" id="composer">
+        <form (submit)="submit()">
+            <material-input [(ngModel)]="messageText" [floatingLabel]="true" label="Say something..."
+                            style="width: 100%;"></material-input>
+        </form>
+    </div>
 </div>

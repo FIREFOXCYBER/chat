@@ -21,15 +21,13 @@ class Message extends Model {
 
   static Message parse(Map map) => new Message(
       id: map['id'],
-      userId: map['user'],
+      userId: map['userId'],
       text: map['text'],
-      user: map.containsKey('user') ? User.parse(map['user']) : null,
-      createdAt: map.containsKey('createdAt')
-          ? DateTime.parse(map['createdAt'])
-          : null,
-      updatedAt: map.containsKey('updatedAt')
-          ? DateTime.parse(map['updatedAt'])
-          : null);
+      user: map['user'] != null ? User.parse(map['user']) : null,
+      createdAt:
+          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      updatedAt:
+          map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null);
 
   Map<String, dynamic> toJson() {
     return {

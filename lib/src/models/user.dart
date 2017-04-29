@@ -22,12 +22,10 @@ class User extends Model {
       googleId: map['googleId'],
       avatar: map['avatar'],
       name: map['name'],
-      createdAt: map.containsKey('createdAt')
-          ? DateTime.parse(map['createdAt'])
-          : null,
-      updatedAt: map.containsKey('updatedAt')
-          ? DateTime.parse(map['updatedAt'])
-          : null);
+      createdAt:
+          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      updatedAt:
+          map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null);
 
   Map<String, dynamic> toJson() {
     return {

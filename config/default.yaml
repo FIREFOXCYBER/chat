@@ -1,5 +1,5 @@
 # Default server configuration.
-host: 127.0.0.1
+host: 0.0.0.0
 mongo_db: mongodb://localhost:27017/chat
 port: 3000
 jwt_secret: "3Q133227824374JQ8217186403328618"

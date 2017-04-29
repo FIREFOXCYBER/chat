@@ -1,16 +1,14 @@
 import 'package:angel_common/angel_common.dart';
 import 'package:angel_framework/hooks.dart' as hooks;
+import 'package:angel_relations/angel_relations.dart' as relations;
 import 'package:angel_rethink/angel_rethink.dart';
 import 'package:angel_security/hooks.dart' as auth;
 import 'package:rethinkdb_driver2/rethinkdb_driver2.dart';
-import 'websocket.dart';
 
 AngelConfigurer configureServer(Connection connection, Rethinkdb r) {
   return (Angel app) async {
     app.use(
-        '/api/messages',
-        new RethinkService(connection, r.table('messages'))
-          ..properties['ws:filter'] = onlyBroadcastToAuthenticatedUsers);
+        '/api/messages', new RethinkService(connection, r.table('messages')));
 
     var service = app.service('api/messages') as HookedService;
 
@@ -26,6 +24,11 @@ AngelConfigurer configureServer(Connection connection, Rethinkdb r) {
         HookedServiceEvent.UPDATED,
         HookedServiceEvent.REMOVED
       ], hooks.disable())
-      ..beforeCreated.listen(auth.associateCurrentUser());
+      ..beforeCreated.listen(hooks.chainListeners([
+        validateEvent(new Validator({'text*': isNonEmptyString})),
+        auth.associateCurrentUser(),
+        hooks.addCreatedAt()
+      ]))
+      ..afterAll(relations.belongsTo('api/users'));
   };
 }

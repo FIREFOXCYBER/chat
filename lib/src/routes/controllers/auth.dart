@@ -26,11 +26,12 @@ class AuthController extends Controller {
   /// Attempt to log a user in
   GoogleAuthCallback googleAuthVerifier(Service userService) {
     return (_, Person profile) async {
-      List<User> users = (await userService.index({
+      Iterable<User> users = (await userService.index({
         'query': {'googleId': profile.id}
-      }))
-          .map(User.parse)
-          .toList();
+      })).map((x) {
+        print('This is x: $x');
+        return x;
+      }).map(User.parse);
 
       if (users.isNotEmpty) {
         var user = users.first
