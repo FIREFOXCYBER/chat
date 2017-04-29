@@ -21,6 +21,7 @@ import '../../services/message.dart';
         position: fixed;
         width: 100%;
         z-index: 999;
+        top: 0;
       }
 
       #composer {
@@ -32,10 +33,6 @@ import '../../services/message.dart';
         padding: 1em;
         box-shadow: rgba(0, 0, 0, 0.156863) 0px 1px 10px, rgba(0, 0, 0, 0.227451) 0px 1px 10px;
         z-index: 998;
-      }
-
-      .main {
-        padding: 1em;
       }
       '''
 ], directives: const [

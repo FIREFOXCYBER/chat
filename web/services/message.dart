@@ -17,19 +17,22 @@ class MessageService {
           try {
             messages
               ..clear()
-              ..addAll(e.data.map(Message.parse));
+              ..addAll(e.data.map(Message.parse))
+              ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
           } catch (e) {
             // Fail silently... ;)
           }
         })
         ..onCreated.listen((e) {
           try {
-            messages.add(Message.parse(e.data));
+            messages
+              ..add(Message.parse(e.data))
+              ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
           } catch (e) {
             // Fail silently... ;)
           }
         })
-      ..index();
+        ..index();
     });
   }
 

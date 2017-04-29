@@ -1,18 +1,18 @@
 <material-toolbar icon="people" title="Chat"></material-toolbar>
-<material-menu *ngIf="messages.isNotEmpty" style="padding: 5em 0em;">
-    <menu-item *ngFor="let message of messages" [avatar]="message.user.avatar" [separated]="true">
-        {{message.text}}
-    </menu-item>
-</material-menu>
 <material-fab (click)="submit()" [raised]="true">
     <glyph icon="send"></glyph>
 </material-fab>
-<div class="main" style="padding: 5em 1em;">
-    <div *ngIf="messages.isEmpty">
+<div class="main" style="margin-top: 4em;">
+    <material-menu *ngIf="messages.isNotEmpty">
+        <menu-item *ngFor="let message of messages" [avatar]="message.user.avatar" [separated]="true">
+            {{message.text}}
+        </menu-item>
+    </material-menu>
+    <div *ngIf="messages.isEmpty" style="padding: 1em">
         No messages have been sent yet. Get the conversation started!
     </div>
     <br>
-    <div *ngIf="auth.user == null">
+    <div *ngIf="auth.user == null" style="padding: 1em">
         <material-button (click)="login()" primary raised>Sign in with Google</material-button>
     </div>
     <div *ngIf="auth.user != null" id="composer">
