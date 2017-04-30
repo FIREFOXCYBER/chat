@@ -10,8 +10,6 @@ dependencies:
   angel_security: ^1.0.0
   angel_websocket: ^1.0.0
   angular2: ^3.0.0
-  material_menu: ^2.0.0
-  material_toolbar: ^2.0.0
 dev_dependencies:
   browser: ^0.10.0
   dart_to_js_script_rewriter: ^1.0.0

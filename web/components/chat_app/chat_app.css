@@ -1,0 +1,4 @@
+.ui.feed {
+    max-height: 35em;
+    overflow-y: auto;
+}

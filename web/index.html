@@ -3,18 +3,34 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css" rel="stylesheet">
     <style>
         html, body {
             margin: 0;
             font-family: Roboto, sans-serif;
         }
+
+        .ui.menu {
+            border-radius: 0;
+        }
     </style>
 </head>
 <body>
 <chat-app>
-    Loading...
+    <div class="ui inverted blue large borderless menu">
+        <div class="header item">
+            <i class="users icon"></i>
+            Chat
+        </div>
+    </div>
+    <div class="ui container">
+        <div class="ui segment" style="min-height: 10em;">
+            <div class="ui active dimmer">
+                <div class="ui text loader">Loading</div>
+            </div>
+            <p></p>
+        </div>
+    </div>
 </chat-app>
 <script src="main.dart" type="application/dart"></script>
 <script src="packages/browser/dart.js" type="application/javascript"></script>

@@ -6,7 +6,7 @@ import 'user.dart';
 class Message extends Model {
   @override
   String id;
-  String userId, text;
+  String userId, text, imageId;
   User user;
   @override
   DateTime createdAt, updatedAt;
@@ -15,6 +15,7 @@ class Message extends Model {
       {String id,
       this.userId,
       this.text,
+      this.imageId,
       this.user,
       this.createdAt,
       this.updatedAt});
@@ -23,6 +24,7 @@ class Message extends Model {
       id: map['id'],
       userId: map['userId'],
       text: map['text'],
+      imageId: map['imageId'],
       user: map['user'] != null ? User.parse(map['user']) : null,
       createdAt:
           map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
@@ -34,6 +36,7 @@ class Message extends Model {
       'id': id,
       'userId': userId,
       'text': text,
+      'imageId': imageId,
       'user': user?.toJson(),
       'createdAt': createdAt?.toUtc()?.toIso8601String(),
       'updatedAt': updatedAt?.toUtc()?.toIso8601String(),

@@ -1,24 +1,56 @@
-<material-toolbar icon="people" title="Chat"></material-toolbar>
-<material-fab (click)="submit()" [raised]="true">
-    <glyph icon="send"></glyph>
-</material-fab>
-<div class="main" style="margin-top: 4em;">
-    <material-menu *ngIf="messages.isNotEmpty">
-        <menu-item *ngFor="let message of messages" [avatar]="message.user.avatar" [separated]="true">
-            {{message.text}}
-        </menu-item>
-    </material-menu>
-    <div *ngIf="messages.isEmpty" style="padding: 1em">
+<div class="ui inverted blue large borderless menu">
+    <div class="header item">
+        <i class="users icon"></i>
+        Chat
+    </div>
+</div>
+<div *ngIf="auth.user == null" class="ui container">
+    <div class="ui header">
+        <i class="user icon"></i>
+        <div class="content">Sign in</div>
+    </div>
+    <div (click)="login()" class="ui google plus button">
+        <i class="google icon"></i>
+        Sign in with Google
+    </div>
+</div>
+<div *ngIf="auth.user != null" class="ui container">
+    <div *ngIf="messages.isEmpty" class="ui message">
         No messages have been sent yet. Get the conversation started!
     </div>
-    <br>
-    <div *ngIf="auth.user == null" style="padding: 1em">
-        <material-button (click)="login()" primary raised>Sign in with Google</material-button>
+    <div *ngIf="messages.isNotEmpty" class="ui top attached padded segment" style="padding: 0">
+        <div class="sixteen wide mobile twelve wide computer column">
+            <div class="ui feed" style="padding: 1em">
+                <div *ngFor="let message of messages" class="event">
+                    <div class="label">
+                        <img [src]="message.user.avatar" [alt]="message.user.name">
+                    </div>
+                    <div class="content">
+                        <div class="summary">
+                            <div class="user">{{message.user.name}}</div>
+                            <div class="date">{{message.createdAt | time_ago}}</div>
+                        </div>
+                        <div class="extra text">{{message.text}}</div>
+                        <div *ngIf="message.imageId?.isNotEmpty == true" class="extra images">
+                            <img [src]="message.imageId | image_url" [alt]="message.text">
+                        </div>
+                    </div>
+                </div>
+                <!--<div *ngFor="let message of messages" [message]="message" class="event"></div>-->
+            </div>
+        </div>
     </div>
-    <div *ngIf="auth.user != null" id="composer">
-        <form (submit)="submit()">
-            <material-input [(ngModel)]="messageText" [floatingLabel]="true" label="Say something..."
-                            style="width: 100%;"></material-input>
+    <div id="composer" class="ui bottom attached segment">
+        <form (submit)="submit()" class="ui form">
+            <div class="field">
+                <textarea [(ngModel)]="messageText" placeholder="Say something..." rows="2"
+                          style="resize: none;"></textarea>
+            </div>
+            <button class="ui button" style="float: right; margin-right: 1em;" type="submit">
+                Send
+                <i class="right arrow icon"></i>
+            </button>
+            <br><br>
         </form>
     </div>
 </div>
